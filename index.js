@@ -21,6 +21,7 @@ user.on('loggedOn', () => {
 
 var username2 = process.env.username2;
 var password2 = process.env.password2;
+var shared_secret2 = process.env.shared2;
 
 var games2 = [578080, 730, 240, 440, 1085660, 220, 320, 340, 1507190, 304930, 489630, 1180660];  // Enter here AppIDs of the needed games
 var status2 = 1;  // 1 - online, 7 - invisible
