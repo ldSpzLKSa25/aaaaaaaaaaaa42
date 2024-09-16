@@ -1,0 +1,16 @@
+{
+  "name": "geciterdekel",
+  "version": "1.0.0",
+  "description": "geciterdekel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "https://github.com/ldSpzLKSa25",
+  "license": "ISC",
+  "dependencies": {
+    "steam-totp": "^2.1.2",
+    "steam-user": "^4.24.0"
+  }
+}
