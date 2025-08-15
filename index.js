@@ -2,22 +2,22 @@ const steamUser = require('steam-user');
 const steamTotp = require('steam-totp');
 const keep_alive = require('./anyad.js')
 
-//var username = process.env.username;
-//var password = process.env.password;
-//var shared_secret = process.env.shared;
+var username = process.env.username;
+var password = process.env.password;
+var shared_secret = process.env.shared;
 
-//var games = [1238080, 70, 381210, 440, 570, 945360, 10, 40970, 107410, 822240, 1222670, 80, 240, 220, 239140, 380, 420, 244210, 1238840, 550, 16700, 100, 223710, 232090, 1250, 1407200, 1269260, 359550, 489630, 304930, 578080, 438100];  // Enter here AppIDs of the needed games
-//var status = 1;  // 1 - online, 7 - invisible
+var games = [10];  // Enter here AppIDs of the needed games
+var status = 1;  // 1 - online, 7 - invisible
 
 
-//user = new steamUser();
-//user.logOn({"accountName": username, "password": password, "twoFactorCode": steamTotp.generateAuthCode(shared_secret)});
-//user.on('loggedOn', () => {
-	//if (user.steamID != null) console.log(user.steamID + ' - Successfully logged on');
-	//user.setPersona(status);               
-	//user.gamesPlayed(games);
+user = new steamUser();
+user.logOn({"accountName": username, "password": password, "twoFactorCode": steamTotp.generateAuthCode(shared_secret)});
+user.on('loggedOn', () => {
+	if (user.steamID != null) console.log(user.steamID + ' - Successfully logged on');
+	user.setPersona(status);               
+	user.gamesPlayed(games);
 
-// });
+ });
 
 var username2 = process.env.username2;
 var password2 = process.env.password2;
