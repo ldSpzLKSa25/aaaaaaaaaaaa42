@@ -1,6 +1,7 @@
 const steamUser = require('steam-user');
 const steamTotp = require('steam-totp');
 const keep_alive = require('./anyad.js')
+const keep_alive2 = require('./anyad2.js')
 
 var username = process.env.username;
 var password = process.env.password;
