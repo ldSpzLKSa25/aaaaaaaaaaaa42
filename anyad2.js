@@ -1,6 +1,11 @@
-var http = require('http');
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT2 || 3001; // Use PORT2 to avoid conflict with PORT
 
-http.createServer(function (req, res) {
-  res.write("0x0007b");
-  res.end();
-}).listen(4040);
+app.get('/', (req, res) => {
+  res.send('Bot 2 is alive');
+});
+
+app.listen(PORT, () => {
+  console.log(`anyad2.js server running on port ${PORT}`);
+});
