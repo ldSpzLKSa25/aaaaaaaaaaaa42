@@ -1,71 +1,68 @@
-const steamUser = require('steam-user');
-const steamTotp = require('steam-totp');
-const keep_alive = require('./anyad.js')
-const keep_alive2 = require('./anyad2.js')
+const SteamUser = require('steam-user');
+const SteamTotp = require('steam-totp');
+const keep_alive = require('./anyad.js');
+const keep_alive2 = require('./anyad2.js');
 
-var username = process.env.username;
-var password = process.env.password;
-var shared_secret = process.env.shared;
+const accounts = [
+  {
+    username: process.env.username,
+    password: process.env.password,
+    shared_secret: process.env.shared,
+    games: [10, 359550, 252490, 381210, 730, 550, 240, 440],
+    status: 1,
+  },
+  {
+    username: process.env.username2,
+    password: process.env.password2,
+    shared_secret: process.env.shared2,
+    games: [440, 438100, 359550],
+    status: 1,
+  },
+  {
+    username: process.env.username3,
+    password: process.env.password3,
+    shared_secret: process.env.shared3,
+    games: [730],
+    status: 1,
+  },
+  {
+    username: process.env.username4,
+    password: process.env.password4,
+    shared_secret: process.env.shared4,
+    games: [730],
+    status: 1,
+  },
+];
 
-var games = [10, 359550, 252490, 381210, 730, 550, 240, 440];  // Enter here AppIDs of the needed games
-var status = 1;  // 1 - online, 7 - invisible
+function loginAccount(account, index) {
+  if (!account.username || !account.password || !account.shared_secret) {
+    console.error(`❌ Account ${index + 1} is missing credentials. Skipping.`);
+    return;
+  }
 
+  const user = new SteamUser();
 
-user = new steamUser();
-user.logOn({"accountName": username, "password": password, "twoFactorCode": steamTotp.generateAuthCode(shared_secret)});
-user.on('loggedOn', () => {
-	if (user.steamID != null) console.log(user.steamID + ' - Successfully logged on');
-	user.setPersona(status);               
-	user.gamesPlayed(games);
+  user.on('loggedOn', () => {
+    console.log(`✅ Account ${index + 1} logged in as ${user.steamID}`);
+    user.setPersona(account.status);
+    user.gamesPlayed(account.games);
+  });
 
- });
+  user.on('error', (err) => {
+    console.error(`❌ Account ${index + 1} error:`, err.message);
+  });
 
-var username2 = process.env.username2;
-var password2 = process.env.password2;
-var shared_secret2 = process.env.shared2;
+  try {
+    user.logOn({
+      accountName: account.username,
+      password: account.password,
+      twoFactorCode: SteamTotp.generateAuthCode(account.shared_secret),
+    });
+  } catch (err) {
+    console.error(`❌ Account ${index + 1} failed to log in:`, err.message);
+  }
+}
 
-var games2 = [440, 438100, 359550];  // Enter here AppIDs of the needed games
-var status2 = 1;  // 1 - online, 7 - invisible
-
-
-user2 = new steamUser();
-user2.logOn({"accountName": username2, "password": password2, "twoFactorCode": steamTotp.generateAuthCode(shared_secret2)});
-user2.on('loggedOn', () => {
- 	if (user2.steamID != null) console.log(user2.steamID + ' - Successfully logged on');
- 	user2.setPersona(status2);               
- 	user2.gamesPlayed(games2);
-
+accounts.forEach((account, index) => {
+  loginAccount(account, index);
 });
-
-var username3 = process.env.username3;
-var password3 = process.env.password3;
-var shared_secret3 = process.env.shared3;
-
-var games3 = [730];  // Enter here AppIDs of the needed games
-var status3 = 1;  // 1 - online, 7 - invisible
-
-
-user3 = new steamUser();
-user3.logOn({"accountName": username3, "password": password3, "twoFactorCode": steamTotp.generateAuthCode(shared_secret3)});
-user3.on('loggedOn', () => {
- 	if (user3.steamID != null) console.log(user3.steamID + ' - Successfully logged on');
- 	user3.setPersona(status3);               
- 	user3.gamesPlayed(games3);
-
-});
-
-var username4 = process.env.username4;
-var password4 = process.env.password4;
-var shared_secret4 = process.env.shared4;
-
-var games4 = [730];  // Enter here AppIDs of the needed games
-var status4 = 1;  // 1 - online, 7 - invisible
-
-
-user4 = new steamUser();
-user4.logOn({"accountName": username4, "password": password4, "twoFactorCode": steamTotp.generateAuthCode(shared_secret4)});
-user4.on('loggedOn', () => {
- 	if (user4.steamID != null) console.log(user4.steamID + ' - Successfully logged on');
- 	user4.setPersona(status4);               
- 	user4.gamesPlayed(games4);
- });
