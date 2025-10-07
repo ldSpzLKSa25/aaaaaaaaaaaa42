@@ -1,6 +1,11 @@
-var http = require('http');
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-http.createServer(function (req, res) {
-  res.write("aadsuhuashdiooweidouh3iudh1");
-  res.end();
-}).listen(8080);
+app.get('/', (req, res) => {
+  res.send('Bot 1 is alive');
+});
+
+app.listen(PORT, () => {
+  console.log(`anyad.js server running on port ${PORT}`);
+});
