@@ -1,7 +1,7 @@
 const SteamUser = require('steam-user');
 const SteamTotp = require('steam-totp');
-const keep_alive = require('./anyad.js');
-const keep_alive2 = require('./anyad2.js');
+const keep_alive = require('./anyad.js');    // Optional keep-alive file
+const keep_alive2 = require('./anyad2.js');  // Optional second keep-alive file
 
 const accounts = [
   {
@@ -43,9 +43,9 @@ function loginAccount(account, index) {
   }
 
   const user = new SteamUser({
-    autoRelogin: false,   // 🔒 Prevent automatic re-login
+    autoRelogin: false,       // ❌ Prevent SteamUser from auto-relogging
     promptSteamGuardCode: false,
-    dataDirectory: null,  // 🔒 Don't persist session files (no cache reuse)
+    dataDirectory: null,      // ❌ Prevent session caching
   });
 
   user.on('loggedOn', () => {
@@ -82,13 +82,30 @@ accounts.forEach((account, index) => {
   loginAccount(account, index);
 });
 
-// ⏱ Shutdown after 8 hours (cleanly)
+// ⏳ Countdown Timer - Logs every minute
+const totalMinutes = 8 * 60;
+let remainingMinutes = totalMinutes;
+
+const countdownInterval = setInterval(() => {
+  remainingMinutes--;
+
+  const hours = Math.floor(remainingMinutes / 60);
+  const minutes = remainingMinutes % 60;
+
+  console.log(`⏳ ${hours} hour${hours !== 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''} until restart...`);
+
+  if (remainingMinutes <= 0) {
+    clearInterval(countdownInterval);
+  }
+}, 60 * 1000); // Every minute
+
+// ⏱ Shutdown after 8 hours
 setTimeout(() => {
   console.log('🕒 8 hours passed. Logging off all accounts...');
 
   steamUsers.forEach((user, i) => {
     try {
-      user.logOff();  // ✅ Proper logout
+      user.logOff();
       console.log(`👋 Account ${i + 1} logged off.`);
     } catch (e) {
       console.error(`⚠️ Error logging off account ${i + 1}: ${e.message}`);
@@ -101,4 +118,4 @@ setTimeout(() => {
     process.exit(0);
   }, 5000);
 
-}, 8 * 60 * 60 * 1000); // 8 hours
+}, totalMinutes * 60 * 1000); // 8 hours in ms
