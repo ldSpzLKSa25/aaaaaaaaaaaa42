@@ -1,7 +1,14 @@
 const SteamUser = require('steam-user');
 const SteamTotp = require('steam-totp');
-const keep_alive = require('./anyad.js');    // Optional keep-alive file
-const keep_alive2 = require('./anyad2.js');  // Optional second keep-alive file
+require('dotenv').config(); // Load .env variables (optional if using Render env panel)
+
+// Optional HTTP keep-alive server if needed on platforms like Replit
+try {
+  require('./anyad.js');
+  require('./anyad2.js');
+} catch (_) {
+  // ignore if not used
+}
 
 const accounts = [
   {
@@ -43,9 +50,9 @@ function loginAccount(account, index) {
   }
 
   const user = new SteamUser({
-    autoRelogin: false,       // ❌ Prevent SteamUser from auto-relogging
+    autoRelogin: false,       // ❌ Prevent auto reconnect
     promptSteamGuardCode: false,
-    dataDirectory: null,      // ❌ Prevent session caching
+    dataDirectory: null,      // ❌ No session file storage
   });
 
   user.on('loggedOn', () => {
@@ -82,7 +89,7 @@ accounts.forEach((account, index) => {
   loginAccount(account, index);
 });
 
-// ⏳ Countdown Timer - Logs every minute
+// ⏳ Countdown Timer - Logs every minute until restart
 const totalMinutes = 8 * 60;
 let remainingMinutes = totalMinutes;
 
@@ -112,10 +119,9 @@ setTimeout(() => {
     }
   });
 
-  // Wait 5 seconds before exiting to ensure logoff completes
+  // Wait 5 seconds before exit to allow clean logout
   setTimeout(() => {
-    console.log('🔁 Exiting process, ready for safe restart...');
-    process.exit(0);
+    console.log('🔁 Restarting bot by exiting with code 1...');
+    process.exit(1); // ⚠️ Force restart on Render
   }, 5000);
-
-}, totalMinutes * 60 * 1000); // 8 hours in ms
+}, totalMinutes * 60 * 1000); // 8 hours
